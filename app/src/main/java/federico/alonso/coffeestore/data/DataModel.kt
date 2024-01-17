@@ -8,9 +8,13 @@ data class Product(
     var image: String
 )
 
+// Se pueden llamar distinto al campo del json real de donde se va a buscar al información, pero
+// hay que hacer un mapeo. Por ejemplo, si en el jason la categoría es "product name" como la variable
+// no puede tener espacio, se puede hacer
+// @SerializedName("product name") var name: String
 data class Category (
     var name: String,
-    var product: List<Product>
+    var products: List<Product>
 )
 
 data class Offer(

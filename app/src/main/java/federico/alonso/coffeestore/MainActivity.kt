@@ -6,13 +6,9 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModelProvider
 import federico.alonso.coffeestore.data.DataManager
-import federico.alonso.coffeestore.pages.OffersPage
 import federico.alonso.coffeestore.ui.theme.CoffeeStoreTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,8 +16,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         // Para que los datos se persistan en cambios de configuración, etc...
-        var dataManager = ViewModelProvider(this)
-            .get(DataManager::class.java)
+        val dataManager = ViewModelProvider(this)[DataManager::class.java]
 
         setContent {
             CoffeeStoreTheme {

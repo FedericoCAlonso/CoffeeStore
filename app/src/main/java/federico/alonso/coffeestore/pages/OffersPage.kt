@@ -1,6 +1,5 @@
 package federico.alonso.coffeestore.pages
 
-import android.widget.ListView
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -19,22 +18,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import federico.alonso.coffeestore.R
 import federico.alonso.coffeestore.data.Offer
 import federico.alonso.coffeestore.data.currentOffers
-import federico.alonso.coffeestore.ui.theme.Alternative2
 import federico.alonso.coffeestore.ui.theme.CoffeeStoreTheme
+
 @Preview(showBackground = true)
 @Composable
 fun OffersPage() {
     Column(
-        modifier = Modifier.verticalScroll(rememberScrollState())
+        modifier = Modifier
+            .verticalScroll(rememberScrollState())
     ){
         for ( offer in currentOffers){
             Offer(offer)

@@ -30,8 +30,6 @@ import federico.alonso.coffeestore.ui.theme.BottomBarUI
 fun App(dataManager: DataManager) {
     var currentPage: MutableState<String> = remember { mutableStateOf("menu") }
 
-
-
     // Scaffold es como un template con barra de título
     // Main y footer
     Scaffold (
@@ -54,7 +52,9 @@ fun App(dataManager: DataManager) {
         content = {
             Box(
                 modifier = Modifier
-                    .padding(bottom = BottomBarUI.marginBottom)
+                    .padding(
+                        bottom = BottomBarUI.marginBottom,
+                        top = 80.dp)
             ){
                 when(currentPage.value){
                     Pages.menuPage.route -> MenuPage(dataManager)

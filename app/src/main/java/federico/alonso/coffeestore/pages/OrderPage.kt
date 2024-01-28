@@ -1,69 +1,45 @@
 package federico.alonso.coffeestore.pages
 
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material.icons.twotone.Delete
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import federico.alonso.coffeestore.data.DataManager
 import federico.alonso.coffeestore.data.ItemInCart
-import federico.alonso.coffeestore.data.Product
-
 
 
 @Composable
 fun OrderPage(dataManager: DataManager) {
 
     if(dataManager.cart.isNotEmpty()){
-       Box{
-            LazyColumn()
-                {
-                    items(dataManager.cart){itemCart->
-
-                        ItemQuantityModifier(dataManager, itemCart)
-
-                        ItemDetails(itemCart)
-                    }
-                    item(
-
-                    ){
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Row(
-                            horizontalArrangement = Arrangement.End,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(32.dp),
-
-                            ){
-                            Text(
-                                "Total: ${dataManager.cartTotalPrice()}",
-                                style = MaterialTheme.typography.titleLarge)
-
-                        }
-                    }
-                }
-
-
-
-
+        Column{
+            CartItems(dataManager)
+            DeliveryForm()
         }
 
     }
@@ -71,54 +47,138 @@ fun OrderPage(dataManager: DataManager) {
 }
 
 @Composable
-private fun ItemDetails(itemCart: ItemInCart) {
+private fun StyleCard(content: @Composable () -> Unit ) {
+    Card(
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(4.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface),
+        shape = RoundedCornerShape(8.dp)
+    ){
+            content()
+    }
+}
+
+@Composable
+fun DeliveryForm() {
+    var text by remember { mutableStateOf("") }
+    StyleCard{
+        Text(
+            "NAME",
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.secondary,
+            modifier = Modifier
+                .padding(start = 16.dp, top = 16.dp)
+        )
+        OutlinedTextField(
+            modifier= Modifier
+                .fillMaxWidth()
+                .padding(
+                    horizontal = 16.dp,
+                    vertical = 32.dp
+                ),
+            value = text,
+            onValueChange = {
+                            text = it
+            },
+            label = {
+                Text("Name for order")
+            },
+            singleLine = true,
+            shape = RoundedCornerShape(32.dp, )
+        )
+
+    }
+
+}
+
+@Composable
+private fun CartItems(dataManager: DataManager) {
+
+    StyleCard {
+        LazyColumn()
+        {
+            item(
+            ) {
+                Text(
+                    "ITEMS",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.secondary,
+                    modifier = Modifier
+                        .padding(start = 16.dp, top = 16.dp)
+                )
+            }
+            items(dataManager.cart) { itemCart ->
+
+                ItemDetails(itemCart, dataManager)
+
+            }
+        }
+    }
+}
+
+@Composable
+private fun ItemDetails(
+    itemCart: ItemInCart,
+    dataManager: DataManager
+) {
     Row(
-        horizontalArrangement = Arrangement.SpaceBetween,
+        //horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .padding(16.dp)
             .fillMaxWidth()
+
     ) {
         Column(
             modifier = Modifier
-                .weight(4F)
+                .weight(1F)
+        ){
+            Text(
+                "${itemCart.quantity}x",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.secondary)
+        }// quantity
+
+        Column(
+            modifier = Modifier
+                .weight(8F)
         ) {
-            Text(itemCart.product.name, fontWeight = FontWeight.Bold)
-        }
+            Text(itemCart.product.name)
+        } // Product
+
+        Column(
+            modifier = Modifier
+                .weight(2F)
+        ) {
+            Text("$${itemCart.product.price * itemCart.quantity}")
+        } // total by product
 
         Column(
             modifier = Modifier
                 .weight(1F)
-        ) {
-
-            Text("$${itemCart.product.price * itemCart.quantity}")
-        }
-
+        ){
+            IconButton(
+                onClick = {
+                    dataManager.cartRemove(itemCart.product)
+                }){
+                Icon(
+                    Icons.TwoTone.Delete,
+                    contentDescription = "Decressing quantity",
+                    tint = MaterialTheme.colorScheme.secondary
+                )
+            }
+        } // Delete icon button
     }
+    Divider(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(1.dp)
+            .padding(horizontal = 8.dp),
+        color = MaterialTheme.colorScheme.secondary
+    )
 }
 
-@Composable
-private fun ItemQuantityModifier(
-    dataManager: DataManager,
-    itemCart: ItemInCart
-) {
-    Row(
-        //horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        IconButton(onClick = { dataManager.cartRemove(itemCart.product) }) {
-            Icon(Icons.Filled.Remove, contentDescription = "Decrement quantity")
-        }
-//
-        Text(text = itemCart.quantity.toString())
-        IconButton(onClick = { dataManager.cartAdd(itemCart.product) }) {
-            Icon(Icons.Filled.Add, contentDescription = "Increment quantity")
 
-        }
-    }
-}
-
-@Preview(showBackground = true, widthDp= 380)
-@Composable
-fun PrevItemDetails(){
-    ItemDetails(itemCart = ItemInCart(Product(1, "Frapuchino", 2.5, "", ""),2))
-}

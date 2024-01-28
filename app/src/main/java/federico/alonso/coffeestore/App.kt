@@ -15,20 +15,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import federico.alonso.coffeestore.data.DataManager
 import federico.alonso.coffeestore.pages.InfoPage
 import federico.alonso.coffeestore.pages.MenuPage
 import federico.alonso.coffeestore.pages.OffersPage
 import federico.alonso.coffeestore.pages.OrderPage
 import federico.alonso.coffeestore.ui.theme.BottomBarUI
+import federico.alonso.coffeestore.ui.theme.ContentDefaultsUI
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun App(dataManager: DataManager) {
-    var currentPage: MutableState<String> = remember { mutableStateOf("menu") }
+    val currentPage: MutableState<String> = remember { mutableStateOf("menu") }
 
     // Scaffold es como un template con barra de título
     // Main y footer
@@ -39,7 +39,7 @@ fun App(dataManager: DataManager) {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(bottom = 16.dp),
+                            .padding(bottom = ContentDefaultsUI.marginBottom),
                         contentAlignment = Alignment.Center
                     )
                     {
@@ -54,7 +54,7 @@ fun App(dataManager: DataManager) {
                 modifier = Modifier
                     .padding(
                         bottom = BottomBarUI.marginBottom,
-                        top = 80.dp)
+                        top = BottomBarUI.marginTop)
             ){
                 when(currentPage.value){
                     Pages.menuPage.route -> MenuPage(dataManager)
@@ -71,7 +71,6 @@ fun App(dataManager: DataManager) {
                 currentPage.value = it                          // currentPage es una variable de estado
             })
         }
-
     )
 
 }

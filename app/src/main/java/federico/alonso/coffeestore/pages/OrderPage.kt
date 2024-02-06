@@ -1,7 +1,6 @@
 package federico.alonso.coffeestore.pages
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
+
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,12 +19,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -39,7 +35,7 @@ fun OrderPage(dataManager: DataManager) {
     if(dataManager.cart.isNotEmpty()){
         Column{
             CartItems(dataManager)
-            DeliveryForm()
+            DeliveryForm(dataManager)
         }
 
     }
@@ -62,8 +58,10 @@ private fun StyleCard(content: @Composable () -> Unit ) {
 }
 
 @Composable
-fun DeliveryForm() {
-    var text by remember { mutableStateOf("") }
+fun DeliveryForm(dataManager: DataManager) {
+    val user = remember { mutableStateOf("")}
+
+
     StyleCard{
         Text(
             "NAME",
@@ -79,15 +77,15 @@ fun DeliveryForm() {
                     horizontal = 16.dp,
                     vertical = 32.dp
                 ),
-            value = text,
+            value = user.value,
             onValueChange = {
-                            text = it
+                            user.value = it
             },
             label = {
                 Text("Name for order")
             },
             singleLine = true,
-            shape = RoundedCornerShape(32.dp, )
+            shape = RoundedCornerShape(32.dp )
         )
 
     }
@@ -100,8 +98,7 @@ private fun CartItems(dataManager: DataManager) {
     StyleCard {
         LazyColumn()
         {
-            item(
-            ) {
+            item {
                 Text(
                     "ITEMS",
                     style = MaterialTheme.typography.titleMedium,

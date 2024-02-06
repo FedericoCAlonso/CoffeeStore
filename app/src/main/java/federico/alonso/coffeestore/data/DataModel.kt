@@ -1,6 +1,5 @@
 package federico.alonso.coffeestore.data
 
-
 data class Product(
     var id: Int,
     var name: String,
@@ -31,3 +30,6 @@ data class Offer(
     var title: String,
     var description: String
 )
+
+
+
